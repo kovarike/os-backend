@@ -139,7 +139,7 @@
 //   try {
 //     const response = await axios.post(`${API_URL}/clients`, clientData, {
 //       headers: {
-//         Authorization: `Bearer ${token}`,
+//         Authorization: `${token}`,
 //       },
 //     });
 //     log.success(`Cliente ${response.data.name} criado com sucesso`);
@@ -162,7 +162,7 @@
 //   try {
 //     const response = await axios.post(`${API_URL}/services`, serviceData, {
 //       headers: {
-//         Authorization: `Bearer ${token}`,
+//         Authorization: `${token}`,
 //       },
 //     });
 //     log.success(`Serviço ${response.data.name} criado com sucesso`);
@@ -186,7 +186,7 @@
 //   try {
 //     const response = await axios.post(`${API_URL}/orders`, orderData, {
 //       headers: {
-//         Authorization: `Bearer ${token}`,
+//         Authorization: `${token}`,
 //       },
 //     });
 //     log.success(`Ordem de serviço ${response.data.id} criada com sucesso`);
@@ -243,10 +243,12 @@ import readlineSync from 'readline-sync';
 import axios, { AxiosError } from 'axios';
 import chalk from 'chalk';
 
+import { tk } from "./src/server"
+
 const prisma = new PrismaClient();
 const API_URL = 'http://localhost:3000';  // URL do seu backend Express
 
-let token = '';  // Variável para armazenar o token
+let token = tk;  // Variável para armazenar o token
 
 // Função para exibir feedback visual
 const log = {
@@ -263,7 +265,6 @@ async function login() {
 
   try {
     const response = await axios.post(`${API_URL}/users/login`, { email, password });
-    token = response.data.token;  // Armazena o token
     log.success('Login realizado com sucesso!');
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -284,9 +285,9 @@ async function createClient() {
 
   try {
     const response = await axios.post(`${API_URL}/clients`, clientData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      // headers: {
+      //   Authorization: `${token}`,
+      // },
     });
     log.success(`Cliente ${response.data.name} criado com sucesso`);
   } catch (error) {
@@ -308,7 +309,7 @@ async function createService() {
   try {
     const response = await axios.post(`${API_URL}/services`, serviceData, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
       },
     });
     log.success(`Serviço ${response.data.name} criado com sucesso`);
@@ -332,7 +333,7 @@ async function createOrder() {
   try {
     const response = await axios.post(`${API_URL}/orders`, orderData, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
       },
     });
     log.success(`Ordem de serviço ${response.data.id} criada com sucesso`);

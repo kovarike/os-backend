@@ -9,6 +9,8 @@ const app = express();
 const prisma = new PrismaClient();
 app.use(express.json());
 
+export let tk = '';
+
 const SECRET_KEY = 'supersecretkey';
 
 console.log(chalk.blue('Servidor iniciando...'));
@@ -112,12 +114,14 @@ app.post('/users/login', async (req: Request, res:Response): Promise<any> => {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
   const token = jwt.sign({ userId: user.id }, SECRET_KEY, { expiresIn: '1h' });
+  tk = token;
+
   log.success('Usuário autenticado com sucesso');
   res.json({ token });
 });
 
 // Criar cliente
-app.post('/clients', authenticate, async (req: Request, res:Response): Promise<any> => {
+app.post('/clients', async (req: Request, res:Response): Promise<any> => {
   const validation = clientSchema.safeParse(req.body);
   if (!validation.success) {
     log.error('Erro ao cadastrar cliente');
